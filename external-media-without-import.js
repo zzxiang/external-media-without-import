@@ -18,8 +18,13 @@ jQuery( function ( $ ) {
   });
 
   $( 'body' ).on( 'click', '.uploader-inline #emwi-add', function ( e ) {
-    var url = $( '#emwi-url' ).val();
-    wp.media.post( 'add_external_media_without_import', { url: url } )
+    var postData = {
+      'url': $( '#emwi-url' ).val(),
+      'width': $( '#emwi-width' ).val(),
+      'height': $( '#emwi-height' ).val(),
+      'mime-type': $( '#emwi-mime-type' ).val()
+    };
+    wp.media.post( 'add_external_media_without_import', postData )
       .done( function ( response ) {
         var attachment = wp.media.model.Attachment.create( response );
         attachment.fetch();

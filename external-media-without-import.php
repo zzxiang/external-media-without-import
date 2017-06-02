@@ -150,7 +150,7 @@ function add_external_media_without_import() {
                 curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true );
                 curl_setopt( $curl_handle, CURLOPT_NOBODY, true );
                 curl_exec( $curl_handle );
-                $mime_type = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
+                $ret['mime-type'] = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
                 curl_close( $curl_handle );
             }
             $ret['error'] = _('Unable to get the image size.');
