@@ -19,13 +19,13 @@ jQuery(function ( $ ) {
 		e.preventDefault();
 	});
 
-	$( 'body' ).on( 'click', '.uploader-inline #emwi-add', function ( e ) {
+	$( 'body' ).on( 'click', '#emwi-in-upload-ui #emwi-add', function ( e ) {
 		if ( isAdding ) {
 			return;
 		}
 		isAdding = true;
 
-		$('.uploader-inline #emwi-add').prop('disabled', true);
+		$('#emwi-in-upload-ui #emwi-add').prop('disabled', true);
 
 		var postData = {
 			'url': $( '#emwi-url' ).val(),
@@ -40,17 +40,19 @@ jQuery(function ( $ ) {
 
 				// Update the attachment list in browser.
 				var frame = wp.media.frame || wp.media.library;
-				frame.content.mode( 'browse' );
+				if ( frame ) {
+					frame.content.mode( 'browse' );
 
-				// The frame variable may be MediaFrame.Manage or MediaFrame.EditAttachments.
-				// In the later case, library = frame.library.
-				var library = frame.state().get( 'library' ) || frame.library;
-				library.add( attachment ? [ attachment ] : [] );
+					// The frame variable may be MediaFrame.Manage or MediaFrame.EditAttachments.
+					// In the later case, library = frame.library.
+					var library = frame.state().get( 'library' ) || frame.library;
+					library.add( attachment ? [ attachment ] : [] );
 
-				if ( wp.media.frame._state != 'library' ) {
-					var selection = frame.state().get( 'selection' );
-					if ( selection ) {
-						selection.add( attachment );
+					if ( wp.media.frame._state != 'library' ) {
+						var selection = frame.state().get( 'selection' );
+						if ( selection ) {
+							selection.add( attachment );
+						}
 					}
 				}
 
@@ -58,7 +60,7 @@ jQuery(function ( $ ) {
 				clear();
 				$( '#emwi-hidden' ).hide();
 				$( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
-				$('.uploader-inline #emwi-add').prop('disabled', false);
+				$( '#emwi-in-upload-ui #emwi-add').prop('disabled', false);
 				isAdding = false;
 			}).fail(function (response ) {
 				$( '#emwi-error' ).text( response['error'] );
@@ -67,18 +69,18 @@ jQuery(function ( $ ) {
 				$( '#emwi-mime-type' ).val( response['mime-type'] );
 				$( '#emwi-hidden' ).show();
 				$( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
-				$('.uploader-inline #emwi-add').prop('disabled', false);
+				$( '#emwi-in-upload-ui #emwi-add' ).prop('disabled', false);
 				isAdding = false;
 			});
 		e.preventDefault();
 		$( '#emwi-buttons-row .spinner' ).css( 'visibility', 'visible' );
 	});
 
-	$( 'body' ).on( 'click', '.uploader-inline #emwi-cancel', function (e ) {
+	$( 'body' ).on( 'click', '#emwi-in-upload-ui #emwi-cancel', function (e ) {
 		clear();
 		$( '#emwi-media-new-panel' ).hide();
 		$( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
-		$('.uploader-inline #emwi-add').prop('disabled', false);
+		$( '#emwi-in-upload-ui #emwi-add' ).prop('disabled', false);
 		isAdding = false;
 		e.preventDefault();
 	});

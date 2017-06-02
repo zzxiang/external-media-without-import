@@ -1,9 +1,9 @@
-.emwi-in-upload-ui {
+#emwi-in-upload-ui {
 	margin: 1.2em auto;
 	text-align: center;
 }
 
-.emwi-in-upload-ui .row1 {
+#emwi-in-upload-ui .row1 {
 	margin-bottom: .5em;
 }
 

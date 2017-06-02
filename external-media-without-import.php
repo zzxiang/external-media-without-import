@@ -54,7 +54,7 @@ function add_submenu() {
 function post_upload_ui() {
 	$media_library_mode = get_user_option( 'media_library_mode', get_current_user_id() );
 ?>
-	<div class="emwi-in-upload-ui">
+	<div id="emwi-in-upload-ui">
 	  <div class="row1">
 		<?php echo __('or'); ?>
 	  </div>
