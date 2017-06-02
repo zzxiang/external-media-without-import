@@ -104,29 +104,34 @@ function admin_post_add_external_media_without_import() {
 }
 
 function add_external_media_without_import() {
-    $url = $_POST['url'];
-    if ( is_callable( 'curl_init' ) ) {
-        $ch = curl_init( $url );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_NOBODY, true );
-        curl_exec( $ch );
-        $file_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-        curl_close( $ch );
-        error_log("ZZXIANG content: $file_contents");
-        error_log("ZZXIANG MIME-TYPE: $file_type");
-    }
-    else {
+    if ( !is_callable( 'curl_init' ) ) {
         return _( "The php of your server doesn't have cURL support enabled, Please contact the server administrator." );
     }
 
-    /*
-    $attach_data = wp_generate_attachment_metadata( 572, 'http://i1266.photobucket.com/albums/jj532/zzxiang/Blog/2017-04-27-uncharted4-01_zpsewsha82u.jpeg' );
-    ob_start(); // start buffer capture
-    var_dump( $attach_data ); // dump the values
-    $contents = ob_get_contents(); // put the buffer into a variable
-    ob_end_clean(); // end capture
-    error_log( "[ZZXIANG DEBUG] $contents" ); // log contents of the result of var_dump( $object )
-     */
+    $url = $_POST['url'];
+
+    // mime type
+    $ch = curl_init( $url );
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt( $ch, CURLOPT_NOBODY, true );
+    curl_exec( $ch );
+    $file_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+    curl_close( $ch );
+
+    // basename
+    $filename = wp_basename( $url );
+
+    $attachment = array(
+        'guid' => $url,
+        'post_mime_type' => $file_type,
+        'post_title' => preg_replace( '/\.[^.]+$/', '', $filename ),
+    );
+    $attachment_id = wp_insert_attachment( $attachment );
+    $attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $url );
+    $attachment_metadata['file'] = $filename;
+    $attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
+    wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
     return "";
 }
 
