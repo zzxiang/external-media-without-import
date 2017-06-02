@@ -1,7 +1,8 @@
 === External Media without Import ===
 Contributors: zzxiang
 Tags: remote media, remote URL, remote image, remote file, external media
-Tested up to: 4.7.4
+Requires at least: 4.7.4
+Tested up to: 4.7.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
 
