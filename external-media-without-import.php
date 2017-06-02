@@ -94,7 +94,7 @@ function print_media_new_panel( $is_in_upload_ui ) {
 	  <div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
 		<div>
 		  <span id="emwi-error"><?php echo urldecode( $_GET['error'] ); ?></span>
-		  <?php echo _('Please fill in the following properties manually.'); ?>
+		  <?php echo _('Please fill in the following properties manually. If you leave the fields blank (or 0 for width/height), the plugin will try to resolve them automatically'); ?>
 		</div>
 		<div id="emwi-properties">
 		  <label><?php echo __('Width'); ?></label>
@@ -138,7 +138,7 @@ function admin_post_add_external_media_without_import() {
 	$info = add_external_media_without_import();
 	$redirect_url = 'upload.php';
 	if ( ! isset( $info['id'] ) ) {
-		$redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $_POST['url'] );
+		$redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $info['url'] );
 		$redirect_url = $redirect_url . '&error=' . urlencode( $info['error'] );
 		$redirect_url = $redirect_url . '&width=' . urlencode( $info['width'] );
 		$redirect_url = $redirect_url . '&height=' . urlencode( $info['height'] );
@@ -148,19 +148,48 @@ function admin_post_add_external_media_without_import() {
 	exit;
 }
 
-function add_external_media_without_import() {
-	$url = $_POST['url'];
-	$width = intval( $_POST['width'] );
-	$height = intval( $_POST['height'] );
-	$mime_type = $_POST['mime-type'];
-
-	$ret = array(
-		'width' => $width,
-		'height' => $height,
-		'mime-type' => $mime_type
+function sanitize_and_validate_input() {
+	// Don't call sanitize_text_field on url because it removes '%20'.
+	// Always use esc_url/esc_url_raw when sanitizing URLs. See:
+	// https://codex.wordpress.org/Function_Reference/esc_url
+	$input = array(
+		'url' => esc_url_raw( $_POST['url'] ),
+		'width' => sanitize_text_field( $_POST['width'] ),
+		'height' => sanitize_text_field( $_POST['height'] ),
+		'mime-type' => sanitize_mime_type( $_POST['mime-type'] )
 	);
 
-	$filename = wp_basename( $url );
+	$width_str = $input['width'];
+	$width_int = intval( $width_str );
+	if ( ! empty( $width_str ) && $width_int <= 0 ) {
+		$input['error'] = _('Width and height must be non-negative integers.');
+		return $input;
+	}
+
+	$height_str = $input['height'];
+	$height_int = intval( $height_str );
+	if ( ! empty( $height_str ) && $height_int <= 0 ) {
+		$input['error'] = _('Width and height must be non-negative integers.');
+		return $input;
+	}
+
+	$input['width'] = $width_int;
+	$input['height'] = $height_int;
+
+	return $input;
+}
+
+function add_external_media_without_import() {
+	$input = sanitize_and_validate_input();
+
+	if ( isset( $input['error'] ) ) {
+		return $input;
+	}
+
+	$url = $input['url'];
+	$width = $input['width'];
+	$height = $input['height'];
+	$mime_type = $input['mime-type'];
 
 	if ( empty( $width ) || empty( $height ) || empty( $mime_type ) ) {
 		 $image_size = @getimagesize( $url );
@@ -172,11 +201,11 @@ function add_external_media_without_import() {
 				curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true );
 				curl_setopt( $curl_handle, CURLOPT_NOBODY, true );
 				curl_exec( $curl_handle );
-				$ret['mime-type'] = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
+				$input['mime-type'] = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
 				curl_close( $curl_handle );
 			}
-			$ret['error'] = _('Unable to get the image size.');
-			return $ret;
+			$input['error'] = _('Unable to get the image size.');
+			return $input;
 		}
 
 		if ( empty( $width ) ) {
@@ -192,6 +221,7 @@ function add_external_media_without_import() {
 		}
 	}
 
+	$filename = wp_basename( $url );
 	$attachment = array(
 		'guid' => $url,
 		'post_mime_type' => $mime_type,
@@ -201,7 +231,7 @@ function add_external_media_without_import() {
 	$attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
 	$attachment_id = wp_insert_attachment( $attachment );
 	wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
-	$ret['id'] = $attachment_id;
 
-	return $ret;
+	$input['id'] = $attachment_id;
+	return $input;
 }
