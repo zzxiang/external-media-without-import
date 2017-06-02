@@ -20,6 +20,10 @@
   padding: 2em;
 }
 
+.media-modal-content #emwi-media-new-panel {
+  background-color: white;
+}
+
 #emwi-media-new-panel .url-row {
   position: relative;
   height: 2.5em;
