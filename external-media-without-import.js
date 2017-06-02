@@ -1,4 +1,6 @@
 jQuery( function ( $ ) {
+  var isAdding = false;
+
   function clear() {
     $( '#emwi-url' ).val( '' );
     $( '#emwi-hidden' ).hide();
@@ -18,6 +20,13 @@ jQuery( function ( $ ) {
   });
 
   $( 'body' ).on( 'click', '.uploader-inline #emwi-add', function ( e ) {
+    if ( isAdding ) {
+      return;
+    }
+    isAdding = true;
+
+    $('.uploader-inline #emwi-add').prop('disabled', true);
+
     var postData = {
       'url': $( '#emwi-url' ).val(),
       'width': $( '#emwi-width' ).val(),
@@ -49,7 +58,8 @@ jQuery( function ( $ ) {
         clear();
         $( '#emwi-hidden' ).hide();
         $( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
-        console.log( 'add done! ' );
+        $('.uploader-inline #emwi-add').prop('disabled', false);
+        isAdding = false;
       }).fail( function (response ) {
         $( '#emwi-error' ).text( response['error'] );
         $( '#emwi-width' ).val( response['width'] );
@@ -57,6 +67,8 @@ jQuery( function ( $ ) {
         $( '#emwi-mime-type' ).val( response['mime-type'] );
         $( '#emwi-hidden' ).show();
         $( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
+        $('.uploader-inline #emwi-add').prop('disabled', false);
+        isAdding = false;
       });
     e.preventDefault();
     $( '#emwi-buttons-row .spinner' ).css( 'visibility', 'visible' );
@@ -66,6 +78,8 @@ jQuery( function ( $ ) {
     clear();
     $( '#emwi-media-new-panel' ).hide();
     $( '#emwi-buttons-row .spinner' ).css( 'visibility', 'hidden' );
+    $('.uploader-inline #emwi-add').prop('disabled', false);
+    isAdding = false;
     e.preventDefault();
   });
 });
