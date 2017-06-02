@@ -85,8 +85,10 @@ function print_media_new_panel( $use_js ) {
           <input id="emwi-mime-type" name="mime-type" type="text" value="<?php echo urldecode( $_GET['mime-type'] ); ?>">
         </div>
       </div>
-      <div class="buttons-row">
+      <div id="emwi-buttons-row">
         <input type="hidden" name="action" value="add_external_media_without_import">
+        <span class="spinner"></span>
+        <input type="button" id="emwi-clear" class="button" value="<?php echo __('Clear') ?>">
         <input type="submit" id="emwi-add" class="button button-primary" value="<?php echo __('Add') ?>">
         <input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
       </div>
@@ -96,8 +98,14 @@ function print_media_new_panel( $use_js ) {
 
 function wp_ajax_add_external_media_without_import() {
     $info = add_external_media_without_import();
-    if ( empty( $info ) ) {
-        wp_send_json_success( 'lalala' );
+    if ( isset( $info['id'] ) ) {
+        if ( $attachment = wp_prepare_attachment_for_js( $info['id'] ) ) {
+            wp_send_json_success( $attachment );
+        }
+        else {
+            $info['error'] = _('Failed to prepare attachment for js');
+            wp_send_json_error( $info );
+        }
     }
     else {
         wp_send_json_error( $info );
@@ -107,7 +115,7 @@ function wp_ajax_add_external_media_without_import() {
 function admin_post_add_external_media_without_import() {
     $info = add_external_media_without_import();
     $redirect_url = 'upload.php';
-    if ( !empty( $info ) ) {
+    if ( !isset( $info['id'] ) ) {
         $redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $_POST['url'] );
         $redirect_url = $redirect_url . '&error=' . urlencode( $info['error'] );
         $redirect_url = $redirect_url . '&width=' . urlencode( $info['width'] );
@@ -124,6 +132,12 @@ function add_external_media_without_import() {
     $height = intval( $_POST['height'] );
     $mime_type = $_POST['mime-type'];
 
+    $ret = array(
+        'width' => $width,
+        'height' => $height,
+        'mime-type' => $mime_type
+    );
+
     $filename = wp_basename( $url );
 
     if ( empty( $width ) || empty( $height ) || empty( $mime_type ) ) {
@@ -139,12 +153,8 @@ function add_external_media_without_import() {
                 $mime_type = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
                 curl_close( $curl_handle );
             }
-            return array(
-                'error' => _('Unable to get the image size.'),
-                'width' => $width,
-                'height' => $height,
-                'mime-type' => $mime_type
-            );
+            $ret['error'] = _('Unable to get the image size.');
+            return $ret;
         }
 
         if ( empty( $width ) ) {
@@ -169,7 +179,8 @@ function add_external_media_without_import() {
     $attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
     $attachment_id = wp_insert_attachment( $attachment );
     wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+    $ret['id'] = $attachment_id;
 
-    return NULL;
+    return $ret;
 }
 

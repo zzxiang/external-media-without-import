@@ -68,11 +68,22 @@
   width: 17em;
 }
 
-#emwi-media-new-panel .buttons-row {
+#emwi-buttons-row {
   margin-top: 1.5em;
   text-align: right;
 }
 
-#emwi-media-new-panel .buttons-row #emwi-add {
+#emwi-buttons-row .spinner {
+  margin-top: 4px;
+  margin-right: 2em;
+  float: none;
+  visibility: hidden;
+}
+
+#emwi-clear {
+  margin-right: 2.3em;
+}
+
+#emwi-add {
   margin-right: 1.5em;
 }
