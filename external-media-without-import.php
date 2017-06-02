@@ -192,17 +192,14 @@ function add_external_media_without_import() {
 	$mime_type = $input['mime-type'];
 
 	if ( empty( $width ) || empty( $height ) || empty( $mime_type ) ) {
-		 $image_size = @getimagesize( $url );
+		$image_size = @getimagesize( $url );
 
 		if ( empty( $image_size ) ) {
-			if ( empty( $mime_type ) && function_exists( 'curl_init' ) ) {
-				// Get MIME type with curl.
-				$curl_handle = curl_init( $url );
-				curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true );
-				curl_setopt( $curl_handle, CURLOPT_NOBODY, true );
-				curl_exec( $curl_handle );
-				$input['mime-type'] = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
-				curl_close( $curl_handle );
+			if ( empty( $mime_type ) ) {
+				$response = wp_remote_head( $url );
+				if ( isset( $response['headers']['content-type'] ) ) {
+					$input['mime-type'] = $response['headers']['content-type'];
+				}
 			}
 			$input['error'] = _('Unable to get the image size.');
 			return $input;
