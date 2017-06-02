@@ -22,23 +22,23 @@ You should have received a copy of the GNU General Public License along
 with External Media without Import. If not, see
 https://www.gnu.org/licenses/gpl-3.0-standalone.html.
 */
-namespace WP_ExternalMedia_WithoutImport;
+namespace emwi;
 
-$style = 'WP_ExternalMedia_WithoutImport_css';
+$style = 'emwi-css';
 $css_file = plugins_url( '/external-media-without-import.css', __FILE__ );
 wp_register_style( $style, $css_file );
 wp_enqueue_style( $style );
 
-$script = 'WP_ExternalMedia_WithoutImport_js';
+$script = 'emwi-js';
 $js_file = plugins_url( '/external-media-without-import.js', __FILE__ );
 wp_register_script( $script, $js_file, array( 'jquery' ) );
 wp_enqueue_script( $script );
 
-add_action( 'admin_menu', 'WP_ExternalMedia_WithoutImport\add_submenu' );
-add_action( 'post-plupload-upload-ui', 'WP_ExternalMedia_WithoutImport\post_upload_ui' );
-add_action( 'post-html-upload-ui', 'WP_ExternalMedia_WithoutImport\post_upload_ui' );
-add_action( 'wp_ajax_add_external_media_without_import', 'WP_ExternalMedia_WithoutImport\wp_ajax_add_external_media_without_import' );
-add_action( 'admin_post_add_external_media_without_import', 'WP_ExternalMedia_WithoutImport\admin_post_add_external_media_without_import' );
+add_action( 'admin_menu', 'emwi\add_submenu' );
+add_action( 'post-plupload-upload-ui', 'emwi\post_upload_ui' );
+add_action( 'post-html-upload-ui', 'emwi\post_upload_ui' );
+add_action( 'wp_ajax_add_external_media_without_import', 'emwi\wp_ajax_add_external_media_without_import' );
+add_action( 'admin_post_add_external_media_without_import', 'emwi\admin_post_add_external_media_without_import' );
 
 function add_submenu() {
 	add_submenu_page(
@@ -47,7 +47,7 @@ function add_submenu() {
 		__( 'Add External Media without Import' ),
 		'manage_options',
 		'add-external-media-without-import',
-		'WP_ExternalMedia_WithoutImport\print_submenu_page'
+		'emwi\print_submenu_page'
 	);
 }
 
