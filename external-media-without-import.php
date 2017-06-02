@@ -40,7 +40,7 @@ function post_upload_ui() {
       </div>
       <div class="row2">
         <?php if ( 'grid' === $media_library_mode ) : ?>
-          <button class="button button-large">
+          <button id="emwi-show" class="button button-large">
             <?php echo __('Add External Media without Import'); ?>
           </button>
           <?php print_media_new_panel( true ); ?>
@@ -68,11 +68,22 @@ function print_media_new_panel( $use_js ) {
       <div class="url-row">
         <label><?php echo __('Add a media from URL'); ?></label>
         <span id="emwi-url-input-wrapper">
-          <input id="emwi-url" name="url" type="url" placeholder="<?php echo __('Image URL');?>" value="<?php echo urldecode( $_GET['url'] ); ?>">
+          <input id="emwi-url" name="url" type="url" required placeholder="<?php echo __('Image URL');?>" value="<?php echo urldecode( $_GET['url'] ); ?>">
         </span>
       </div>
-      <div id="emwi-error" <?php if ( $use_js || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
-        <?php echo urldecode( $_GET['error'] ); ?>
+      <div id="emwi-hidden" <?php if ( $use_js || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
+        <div>
+          <span id="emwi-error"><?php echo urldecode( $_GET['error'] ); ?></span>
+          <?php echo _('Please fill in the following properties manually.'); ?>
+        </div>
+        <div id="emwi-properties">
+          <label><?php echo __('Width'); ?></label>
+          <input id="emwi-width" name="width" type="number" value="<?php echo urldecode( $_GET['width'] ); ?>">
+          <label><?php echo __('Height'); ?></label>
+          <input id="emwi-height" name="height" type="number" value="<?php echo urldecode( $_GET['height'] ); ?>">
+          <label><?php echo __('MIME Type'); ?></label>
+          <input id="emwi-mime-type" name="mime-type" type="text" value="<?php echo urldecode( $_GET['mime-type'] ); ?>">
+        </div>
       </div>
       <div class="buttons-row">
         <input type="hidden" name="action" value="add_external_media_without_import">
@@ -84,54 +95,81 @@ function print_media_new_panel( $use_js ) {
 }
 
 function wp_ajax_add_external_media_without_import() {
-    $error = add_external_media_without_import();
-    if ( empty( $error ) ) {
+    $info = add_external_media_without_import();
+    if ( empty( $info ) ) {
         wp_send_json_success( 'lalala' );
     }
     else {
-        wp_send_json_error( $error, 500 );
+        wp_send_json_error( $info );
     }
 }
 
 function admin_post_add_external_media_without_import() {
-    $error = add_external_media_without_import();
+    $info = add_external_media_without_import();
     $redirect_url = 'upload.php';
-    if ( !empty( $error ) ) {
-        $redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $_POST['url'] ) . '&error=' . urlencode( $error );
+    if ( !empty( $info ) ) {
+        $redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $_POST['url'] );
+        $redirect_url = $redirect_url . '&error=' . urlencode( $info['error'] );
+        $redirect_url = $redirect_url . '&width=' . urlencode( $info['width'] );
+        $redirect_url = $redirect_url . '&height=' . urlencode( $info['height'] );
+        $redirect_url = $redirect_url . '&mime-type=' . urlencode( $info['mime-type'] );
     }
 	wp_redirect( admin_url( $redirect_url ) );
     exit;
 }
 
 function add_external_media_without_import() {
-    if ( !is_callable( 'curl_init' ) ) {
-        return _( "The php of your server doesn't have cURL support enabled, Please contact the server administrator." );
-    }
-
     $url = $_POST['url'];
+    $width = intval( $_POST['width'] );
+    $height = intval( $_POST['height'] );
+    $mime_type = $_POST['mime-type'];
 
-    // mime type
-    $ch = curl_init( $url );
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-    curl_setopt( $ch, CURLOPT_NOBODY, true );
-    curl_exec( $ch );
-    $file_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-    curl_close( $ch );
-
-    // basename
     $filename = wp_basename( $url );
+
+    if ( empty( $width ) || empty( $height ) || empty( $mime_type ) ) {
+         $image_size = @getimagesize( $url );
+
+        if ( empty( $image_size ) ) {
+            if ( empty( $mime_type ) && function_exists( 'curl_init' ) ) {
+                // Get MIME type with curl.
+                $curl_handle = curl_init( $url );
+                curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true );
+                curl_setopt( $curl_handle, CURLOPT_NOBODY, true );
+                curl_exec( $curl_handle );
+                $mime_type = curl_getinfo( $curl_handle, CURLINFO_CONTENT_TYPE );
+                curl_close( $curl_handle );
+            }
+            return array(
+                'error' => _('Unable to get the image size.'),
+                'width' => $width,
+                'height' => $height,
+                'mime-type' => $mime_type
+            );
+        }
+
+        if ( empty( $width ) ) {
+            $width = $image_size[0];
+        }
+
+        if ( empty( $height ) ) {
+            $height = $image_size[1];
+        }
+
+        if ( empty( $mime_type ) ) {
+            $mime_type = $image_size['mime'];
+        }
+    }
 
     $attachment = array(
         'guid' => $url,
-        'post_mime_type' => $file_type,
+        'post_mime_type' => $mime_type,
         'post_title' => preg_replace( '/\.[^.]+$/', '', $filename ),
     );
-    $attachment_id = wp_insert_attachment( $attachment );
-    $attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $url );
-    $attachment_metadata['file'] = $filename;
+    $attachment_metadata = array( 'width' => $width, 'height' => $height, 'file' => $filename );
     $attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
+    $attachment_id = wp_insert_attachment( $attachment );
     wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
 
-    return "";
+    return NULL;
 }
 

@@ -31,15 +31,41 @@
   line-height: 2.5em;
 }
 
-#emwi-media-new-panel .url-row #emwi-url-input-wrapper {
+#emwi-url-input-wrapper {
   display: inline-block;
   position: absolute;
   left: 13em;
   right: 0;
 }
 
-#emwi-media-new-panel .url-row #emwi-url-input-wrapper input {
+#emwi-url {
   width: 100%;
+}
+
+#emwi-error {
+  color: red;
+}
+
+#emwi-properties {
+  margin-top: 1.5em;
+}
+
+#emwi-properties label {
+  margin-right: 1em;
+}
+
+#emwi-width {
+  margin-right: 2.5em;
+  width: 6em;
+}
+
+#emwi-height {
+  margin-right: 7em;
+  width: 6em;
+}
+
+#emwi-type {
+  width: 17em;
 }
 
 #emwi-media-new-panel .buttons-row {
@@ -49,8 +75,4 @@
 
 #emwi-media-new-panel .buttons-row #emwi-add {
   margin-right: 1.5em;
-}
-
-#emwi-error {
-  color: red;
 }
