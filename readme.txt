@@ -23,3 +23,7 @@ The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the med
 	* Click the 'Media' -> 'Add External Media without Import' submenu, you will be directed to the submenu page. Fill the URL in the input field and click the 'Add' button, the remote image will be added.
 	* During the process of editing a post or page, click 'Add Media' -> 'Upload Files', and in the upload panel click 'Add External Media without Import'. The 'Add a media from URL' panel will appear, or your are directed to the 'Add External Media without Import' submenu page, depending whether your media library page is in grid mode or list mode. Fill the URL in the input field and click the 'Add' button, the remote image will be added.
 4. WordPress needs to know in advance the width and height of an image in order to correctly display it in the media library page and any post/page. In most cases, the plugin resolves these properties automatically without worrying you. But in rare cases, the plugin may fail to get the width and height of the image you specify when you click 'Add' in the 'Add a media from URL' panel. In that case, some input fields will show up and let you fill in the properties manually.
+
+== Screenshots ==
+1. Click 'Add External Media without Import' button in the media upload panel.
+2. Enter the url of the external media you'd like to add to the media library and click 'Add'.
