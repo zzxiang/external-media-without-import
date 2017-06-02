@@ -62,16 +62,16 @@ function print_submenu_page() {
 <?php
 }
 
-function print_media_new_panel( $use_js ) {
+function print_media_new_panel( $is_in_upload_ui ) {
 ?>
-    <div id="emwi-media-new-panel" <?php if ( $use_js  ) : ?>style="display: none"<?php endif; ?>>
+    <div id="emwi-media-new-panel" <?php if ( $is_in_upload_ui  ) : ?>style="display: none"<?php endif; ?>>
       <div class="url-row">
         <label><?php echo __('Add a media from URL'); ?></label>
         <span id="emwi-url-input-wrapper">
           <input id="emwi-url" name="url" type="url" required placeholder="<?php echo __('Image URL');?>" value="<?php echo urldecode( $_GET['url'] ); ?>">
         </span>
       </div>
-      <div id="emwi-hidden" <?php if ( $use_js || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
+      <div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
         <div>
           <span id="emwi-error"><?php echo urldecode( $_GET['error'] ); ?></span>
           <?php echo _('Please fill in the following properties manually.'); ?>
@@ -90,7 +90,9 @@ function print_media_new_panel( $use_js ) {
         <span class="spinner"></span>
         <input type="button" id="emwi-clear" class="button" value="<?php echo __('Clear') ?>">
         <input type="submit" id="emwi-add" class="button button-primary" value="<?php echo __('Add') ?>">
-        <input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
+        <?php if ( $is_in_upload_ui  ) : ?>
+          <input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
+        <?php endif; ?>
       </div>
     </div>
 <?php
@@ -115,7 +117,7 @@ function wp_ajax_add_external_media_without_import() {
 function admin_post_add_external_media_without_import() {
     $info = add_external_media_without_import();
     $redirect_url = 'upload.php';
-    if ( !isset( $info['id'] ) ) {
+    if ( ! isset( $info['id'] ) ) {
         $redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $_POST['url'] );
         $redirect_url = $redirect_url . '&error=' . urlencode( $info['error'] );
         $redirect_url = $redirect_url . '&width=' . urlencode( $info['width'] );
