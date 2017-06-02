@@ -50,3 +50,7 @@
 #emwi-media-new-panel .buttons-row #emwi-add {
   margin-right: 1.5em;
 }
+
+#emwi-error {
+  color: red;
+}
