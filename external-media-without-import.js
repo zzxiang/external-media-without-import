@@ -23,13 +23,23 @@ jQuery( function ( $ ) {
       .done( function ( response ) {
         var attachment = wp.media.model.Attachment.create( response );
         attachment.fetch();
+
         // Update the attachment list in browser.
         var frame = wp.media.frame || wp.media.library;
         frame.content.mode( 'browse' );
-        frame.state().get( 'library' ).add( attachment ? [ attachment ] : [] );
+
+        // The frame variable may be MediaFrame.Manage or MediaFrame.EditAttachments.
+        // In the later case, library = frame.library.
+        var library = frame.state().get( 'library' ) || frame.library;
+        library.add( attachment ? [ attachment ] : [] );
+
         if ( wp.media.frame._state != 'library' ) {
-          frame.state().get( 'selection' ).add( attachment );
+          var selection = frame.state().get( 'selection' );
+          if ( selection ) {
+            selection.add( attachment );
+          }
         }
+
         // Reset the input.
         clear();
         $( '#emwi-hidden' ).hide();
