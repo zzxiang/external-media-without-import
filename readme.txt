@@ -22,7 +22,6 @@ The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the med
 
 Then you can use the plugin to add external media wihtout import:
 
-
 Click the 'Add New' button in the 'Media' -> 'Library' page, the media upload panel will show up, in which there's an 'Add External Media without Import' button. Click it.
 
 If the Library page is in grid mode, the 'Add a media from URL' panel will appear.
