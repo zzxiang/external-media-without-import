@@ -197,7 +197,7 @@ function add_external_media_without_import() {
 		if ( empty( $image_size ) ) {
 			if ( empty( $mime_type ) ) {
 				$response = wp_remote_head( $url );
-				if ( isset( $response['headers']['content-type'] ) ) {
+				if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
 					$input['mime-type'] = $response['headers']['content-type'];
 				}
 			}
