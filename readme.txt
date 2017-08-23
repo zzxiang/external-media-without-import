@@ -2,8 +2,8 @@
 Contributors: zzxiang
 Tags: remote media, remote URL, remote image, remote file, external media
 Requires at least: 4.7.4
-Tested up to: 4.7.5
-Stable tag: 1.0
+Tested up to: 4.8.1
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
 
@@ -14,6 +14,8 @@ Add external images to the media library without importing, i.e. uploading them 
 By default, adding an image to the WordPress media library requires you to import or upload the image to the WordPress site, which means there must be a copy of the image file stored in the site. This plugin enables you to add an image stored in an external site to the media library by just adding a URL linking to the remote image address. In this way you can host the images in a dedicated server other than the WordPress site, and still be able to show them by various gallery plugins which only take images from the media library.
 
 The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the media upload panel and a dedicated Add External Media without Import submenu page. Therefore you can either add an external media before (or after) editing any post or page, or in the process of editing a post or page without interrupting the editing process.
+
+[View on GitHub](https://github.com/zzxiang/external-media-without-import)
 
 == Installation ==
 
@@ -35,3 +37,11 @@ Note that WordPress needs to know in advance the width and height of an image in
 == Screenshots ==
 1. Click 'Add External Media without Import' button in the media upload panel.
 2. Enter the url of the external media you'd like to add to the media library and click 'Add'.
+
+== Changelog ==
+
+**Version 1.0.1**
+
+Fixed a bug which causes HTTP 500 - internal server error.
+
+The error occurs in previous version when the plugin fails to get the image size and MIME type. The HTTP 500 error causes the plugin message not correctly displayed in the media upload panel. It also causes the Add External Media without Import page broken.
