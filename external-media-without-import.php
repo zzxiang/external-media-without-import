@@ -88,21 +88,21 @@ function print_media_new_panel( $is_in_upload_ui ) {
 	  <div class="url-row">
 		<label><?php echo __('Add a media from URL'); ?></label>
 		<span id="emwi-url-input-wrapper">
-		  <input id="emwi-url" name="url" type="url" required placeholder="<?php echo __('Image URL');?>" value="<?php echo urldecode( $_GET['url'] ); ?>">
+		  <input id="emwi-url" name="url" type="url" required placeholder="<?php echo __('Image URL');?>" value="<?php echo esc_url( $_GET['url'] ); ?>">
 		</span>
 	  </div>
 	  <div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
 		<div>
-		  <span id="emwi-error"><?php echo urldecode( $_GET['error'] ); ?></span>
+		  <span id="emwi-error"><?php echo esc_html( $_GET['error'] ); ?></span>
 		  <?php echo _('Please fill in the following properties manually. If you leave the fields blank (or 0 for width/height), the plugin will try to resolve them automatically'); ?>
 		</div>
 		<div id="emwi-properties">
 		  <label><?php echo __('Width'); ?></label>
-		  <input id="emwi-width" name="width" type="number" value="<?php echo urldecode( $_GET['width'] ); ?>">
+		  <input id="emwi-width" name="width" type="number" value="<?php echo esc_html( $_GET['width'] ); ?>">
 		  <label><?php echo __('Height'); ?></label>
-		  <input id="emwi-height" name="height" type="number" value="<?php echo urldecode( $_GET['height'] ); ?>">
+		  <input id="emwi-height" name="height" type="number" value="<?php echo esc_html( $_GET['height'] ); ?>">
 		  <label><?php echo __('MIME Type'); ?></label>
-		  <input id="emwi-mime-type" name="mime-type" type="text" value="<?php echo urldecode( $_GET['mime-type'] ); ?>">
+		  <input id="emwi-mime-type" name="mime-type" type="text" value="<?php echo esc_html( $_GET['mime-type'] ); ?>">
 		</div>
 	  </div>
 	  <div id="emwi-buttons-row">
