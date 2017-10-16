@@ -36,3 +36,11 @@ Note that WordPress needs to know in advance the width and height of an image in
 Fixed a bug which causes HTTP 500 - internal server error.
 
 The error occurs in previous version when the plugin fails to get the image size and MIME type. The HTTP 500 error causes the plugin message not correctly displayed in the media upload panel. It also causes the Add External Media without Import page broken.
+
+**Version 1.0.2**
+
+Fixed XSS Security Vulnerabilities and bug with mime types including '+' such as 'image/svg+xml'.
+
+Thank [Mike Vastola](https://github.com/mvastola).
+
+[Click to see detailed information of this bug](https://github.com/zzxiang/external-media-without-import/pull/3).
