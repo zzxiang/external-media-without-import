@@ -26,13 +26,21 @@ namespace emwi;
 
 $style = 'emwi-css';
 $css_file = plugins_url( '/external-media-without-import.css', __FILE__ );
-wp_register_style( $style, $css_file );
-wp_enqueue_style( $style );
+add_action('wp_register_style', function () use( $style, $css_file ){
+    wp_register_style( $style, $css_file );
+});
+add_action('wp_enqueue_style', function () use( $style ){
+    wp_enqueue_script( $style );
+});
 
 $script = 'emwi-js';
 $js_file = plugins_url( '/external-media-without-import.js', __FILE__ );
-wp_register_script( $script, $js_file, array( 'jquery' ) );
-wp_enqueue_script( $script );
+add_action('wp_register_script', function () use( $script, $js_file ){
+    wp_register_script( $script, $js_file, array( 'jquery' ) );
+});
+add_action('wp_enqueue_scripts', function () use( $script ){
+    wp_enqueue_script( $script );
+});
 
 add_action( 'admin_menu', 'emwi\add_submenu' );
 add_action( 'post-plupload-upload-ui', 'emwi\post_upload_ui' );
