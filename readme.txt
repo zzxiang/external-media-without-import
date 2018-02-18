@@ -41,7 +41,7 @@ Note that WordPress needs to know in advance the width and height of an image in
 == Changelog ==
 
 = Version 1.0.2.1 =
-Just changed te readme file, the changelog in previous readme file seems not work.
+Just changed the readme file, the changelog in previous readme file seems not work.
 
 = Version 1.0.2 =
 Fixed XSS Security Vulnerabilities and bug with mime types including '+' such as 'image/svg+xml'.
