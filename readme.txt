@@ -2,7 +2,7 @@
 Contributors: zzxiang
 Tags: remote media, remote URL, remote image, remote file, external media
 Requires at least: 4.7.4
-Tested up to: 4.8.1
+Tested up to: 4.9.4
 Stable tag: 1.0.2.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
