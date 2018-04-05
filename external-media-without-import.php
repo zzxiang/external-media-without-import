@@ -59,7 +59,7 @@ function post_upload_ui() {
 		<?php echo __('or'); ?>
 	  </div>
 	  <div class="row2">
-		<?php if ( 'grid' === $media_library_mode ) : ?>
+		<?php if ( 'grid' === $media_library_mode ) : // FIXME: media_library_mode seems to be unavailable now in WordPress 4.9.4. ?>
 		  <button id="emwi-show" class="button button-large">
 			<?php echo __('Add External Media without Import'); ?>
 		  </button>
