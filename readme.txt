@@ -22,7 +22,7 @@ The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the med
 1. Upload the plugin files to the `/wp-content/plugins/external-media-without-import` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 
-Then you can use the plugin to add external media wihtout import:
+Then you can use the plugin to add external media without import:
 
 Click the 'Add New' button in the 'Media' -> 'Library' page, the media upload panel will show up, in which there's an 'Add External Media without Import' button. Click it.
 
