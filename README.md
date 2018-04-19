@@ -1,5 +1,5 @@
 External Media without Import
-============================================================================ 
+============================================================================
 By default, adding an image to the WordPress media library requires you to import or upload the image to the WordPress site, which means there must be a copy of the image file stored in the site. This plugin enables you to add an image stored in an external site to the media library by just adding a URL linking to the remote image address. In this way you can host the images in a dedicated server other than the WordPress site, and still be able to show them by various gallery plugins which only take images from the media library.
 
 The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the media upload panel and a dedicated Add External Media without Import submenu page. Therefore you can either add an external media before (or after) editing any post or page, or in the process of editing a post or page without interrupting the editing process.
@@ -9,7 +9,7 @@ The plugin provides buttons and inputs in the 'Media' -> 'Add New' page, the med
 1. Upload the plugin files to the `/wp-content/plugins/external-media-without-import` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 
-Then you can use the plugin to add external media wihtout import.
+Then you can use the plugin to add external media without import.
 
 ## Usage
 
