@@ -59,16 +59,18 @@ function post_upload_ui() {
 		<?php echo __('or'); ?>
 	  </div>
 	  <div class="row2">
+<?php /*
 		<?php if ( 'grid' === $media_library_mode ) : // FIXME: seems that media_library_mode being empty also means grid mode ?>
 		  <button id="emwi-show" class="button button-large">
 			<?php echo __('Add External Media without Import'); ?>
 		  </button>
 		  <?php print_media_new_panel( true ); ?>
 		<?php else : ?>
+ */ ?>
 		  <a class="button button-large" href="<?php echo esc_url( admin_url( '/upload.php?page=add-external-media-without-import', __FILE__ ) ); ?>">
 			<?php echo __('Add External Media without Import'); ?>
 		  </a>
-		<?php endif; ?>
+		<?php // endif; ?>
 	  </div>
 	</div>
 <?php
@@ -85,12 +87,8 @@ function print_submenu_page() {
 function print_media_new_panel( $is_in_upload_ui ) {
 ?>
 	<div id="emwi-media-new-panel" <?php if ( $is_in_upload_ui  ) : ?>style="display: none"<?php endif; ?>>
-	  <div class="url-row">
-		<label><?php echo __('Add a media from URL'); ?></label>
-		<span id="emwi-url-input-wrapper">
-		  <input id="emwi-url" name="url" type="url" required placeholder="<?php echo __('Image URL');?>" value="<?php echo esc_url( $_GET['url'] ); ?>">
-		</span>
-	  </div>
+      <label id="emwi-urls-label"><?php echo __('Add medias from URLs'); ?></label>
+      <textarea id="emwi-urls" rows="<?php echo $is_in_upload_ui ? 3 : 10 ?>" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php echo esc_url( $_GET['urls'] ); ?>"></textarea>
 	  <div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
 		<div>
 		  <span id="emwi-error"><?php echo esc_html( $_GET['error'] ); ?></span>
@@ -110,7 +108,7 @@ function print_media_new_panel( $is_in_upload_ui ) {
 		<span class="spinner"></span>
 		<input type="button" id="emwi-clear" class="button" value="<?php echo __('Clear') ?>">
 		<input type="submit" id="emwi-add" class="button button-primary" value="<?php echo __('Add') ?>">
-		<?php if ( $is_in_upload_ui  ) : ?>
+		<?php if ( $is_in_upload_ui ) : ?>
 		  <input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
 		<?php endif; ?>
 	  </div>
@@ -120,16 +118,12 @@ function print_media_new_panel( $is_in_upload_ui ) {
 
 function wp_ajax_add_external_media_without_import() {
 	$info = add_external_media_without_import();
-	if ( isset( $info['id'] ) ) {
-		if ( $attachment = wp_prepare_attachment_for_js( $info['id'] ) ) {
-			wp_send_json_success( $attachment );
-		}
-		else {
-			$info['error'] = _('Failed to prepare attachment for js');
-			wp_send_json_error( $info );
-		}
+	$attachment_ids = $info['attachment_ids'];
+	if ( $attachment = wp_prepare_attachment_for_js( $info['id'] ) ) {
+		wp_send_json_success( $attachment );
 	}
 	else {
+		$info['error'] = _('Failed to prepare attachment for js');
 		wp_send_json_error( $info );
 	}
 }
@@ -137,8 +131,9 @@ function wp_ajax_add_external_media_without_import() {
 function admin_post_add_external_media_without_import() {
 	$info = add_external_media_without_import();
 	$redirect_url = 'upload.php';
-	if ( ! isset( $info['id'] ) ) {
-		$redirect_url = $redirect_url .  '?page=add-external-media-without-import&url=' . urlencode( $info['url'] );
+	$urls = $info['urls'];
+	if ( ! empty( $urls ) ) {
+		$redirect_url = $redirect_url .  '?page=add-external-media-without-import&urls=' . urlencode( $urls );
 		$redirect_url = $redirect_url . '&error=' . urlencode( $info['error'] );
 		$redirect_url = $redirect_url . '&width=' . urlencode( $info['width'] );
 		$redirect_url = $redirect_url . '&height=' . urlencode( $info['height'] );
@@ -149,11 +144,18 @@ function admin_post_add_external_media_without_import() {
 }
 
 function sanitize_and_validate_input() {
-	// Don't call sanitize_text_field on url because it removes '%20'.
-	// Always use esc_url/esc_url_raw when sanitizing URLs. See:
-	// https://codex.wordpress.org/Function_Reference/esc_url
+	$raw_urls = explode( "\n", $_POST['urls'] );
+	$urls = array();
+	foreach ( $raw_urls as $i => $raw_url ) {
+		// Don't call sanitize_text_field on url because it removes '%20'.
+		// Always use esc_url/esc_url_raw when sanitizing URLs. See:
+		// https://codex.wordpress.org/Function_Reference/esc_url
+		$urls[$i] = esc_url_raw( trim( $raw_url ) );
+	}
+    unset( $url );  // break the reference with the last element
+
 	$input = array(
-		'url' => esc_url_raw( $_POST['url'] ),
+		'urls' =>  $urls,
 		'width' => sanitize_text_field( $_POST['width'] ),
 		'height' => sanitize_text_field( $_POST['height'] ),
 		'mime-type' => sanitize_mime_type( $_POST['mime-type'] )
@@ -186,49 +188,58 @@ function add_external_media_without_import() {
 		return $input;
 	}
 
-	$url = $input['url'];
+	$urls = $input['urls'];
 	$width = $input['width'];
 	$height = $input['height'];
 	$mime_type = $input['mime-type'];
 
-	if ( empty( $width ) || empty( $height ) || empty( $mime_type ) ) {
-		$image_size = @getimagesize( $url );
+	$attachment_ids = array();
+	$failed_urls = array();
 
-		if ( empty( $image_size ) ) {
-			if ( empty( $mime_type ) ) {
-				$response = wp_remote_head( $url );
-				if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
-					$input['mime-type'] = $response['headers']['content-type'];
-				}
+	foreach ( $urls as $url ) {
+		if ( empty( $width ) || empty( $height ) ) {
+			$image_size = @getimagesize( $url );
+			if ( empty( $image_size ) ) {
+				array_push( $failed_urls, $url );
+				continue;
 			}
-			$input['error'] = _('Unable to get the image size.');
-			return $input;
+			$width_of_the_image = empty( $width ) ? $image_size[0] : $width;
+			$height_of_the_image = empty( $height ) ? $image_size[1] : $height;
+			$mime_type_of_the_image = empty( $mime_type ) ? $image_size['mime'] : $mime_type;
+		} elseif ( empty( $mime_type ) ) {
+			$response = wp_remote_head( $url );
+			if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
+				$width_of_the_image = $width;
+				$height_of_the_image = $height;
+				$mime_type_of_the_image = $response['headers']['content-type'];
+			} else {
+				continue;
+			}
 		}
-
-		if ( empty( $width ) ) {
-			$width = $image_size[0];
-		}
-
-		if ( empty( $height ) ) {
-			$height = $image_size[1];
-		}
-
-		if ( empty( $mime_type ) ) {
-			$mime_type = $image_size['mime'];
-		}
+		$filename = wp_basename( $url );
+		$attachment = array(
+			'guid' => $url,
+			'post_mime_type' => $mime_type_of_the_image,
+			'post_title' => preg_replace( '/\.[^.]+$/', '', $filename ),
+		);
+		$attachment_metadata = array(
+			'width' => $width_of_the_image,
+			'height' => $height_of_the_image,
+			'file' => $filename );
+		$attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
+		$attachment_id = wp_insert_attachment( $attachment );
+		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		array_push( $attachment_ids, $attachment_id );
 	}
 
-	$filename = wp_basename( $url );
-	$attachment = array(
-		'guid' => $url,
-		'post_mime_type' => $mime_type,
-		'post_title' => preg_replace( '/\.[^.]+$/', '', $filename ),
-	);
-	$attachment_metadata = array( 'width' => $width, 'height' => $height, 'file' => $filename );
-	$attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
-	$attachment_id = wp_insert_attachment( $attachment );
-	wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+	$input['attachment_ids'] = $attachment_ids;
 
-	$input['id'] = $attachment_id;
+	$failed_urls_string = implode( "\n", $failed_urls );
+	$input['urls'] = $failed_urls_string;
+
+	if ( ! empty( $failed_urls_string ) ) {
+		$input['error'] = 'Failed to get info of the images.';
+	}
+
 	return $input;
 }

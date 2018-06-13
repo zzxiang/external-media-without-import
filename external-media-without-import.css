@@ -24,25 +24,12 @@
 	background-color: white;
 }
 
-#emwi-media-new-panel .url-row {
-	position: relative;
-	height: 2.5em;
-	margin-bottom: 1.5em;
+#emwi-urls-label {
+  display: block;
+  margin-bottom: 1em;
 }
 
-#emwi-media-new-panel .url-row label {
-	width: 13em;
-	line-height: 2.5em;
-}
-
-#emwi-url-input-wrapper {
-	display: inline-block;
-	position: absolute;
-	left: 13em;
-	right: 0;
-}
-
-#emwi-url {
+#emwi-urls {
 	width: 100%;
 }
 

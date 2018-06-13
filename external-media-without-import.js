@@ -2,7 +2,7 @@ jQuery(function ( $ ) {
 	var isAdding = false;
 
 	function clear() {
-		$( '#emwi-url' ).val( '' );
+		$( '#emwi-urls' ).val( '' );
 		$( '#emwi-hidden' ).hide();
 		$( '#emwi-error' ).text( '' );
 		$( '#emwi-width' ).val( '' );
@@ -28,7 +28,7 @@ jQuery(function ( $ ) {
 		$('#emwi-in-upload-ui #emwi-add').prop('disabled', true);
 
 		var postData = {
-			'url': $( '#emwi-url' ).val(),
+			'url': $( '#emwi-urls' ).val(),
 			'width': $( '#emwi-width' ).val(),
 			'height': $( '#emwi-height' ).val(),
 			'mime-type': $( '#emwi-mime-type' ).val()
