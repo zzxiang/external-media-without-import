@@ -2,8 +2,8 @@
 Contributors: zzxiang
 Tags: remote media, remote URL, remote image, remote file, external media
 Requires at least: 4.7.4
-Tested up to: 4.9.4
-Stable tag: 1.0.2.1
+Tested up to: 4.9.8
+Stable tag: 1.0.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
 
@@ -39,6 +39,9 @@ Note that WordPress needs to know in advance the width and height of an image in
 2. Enter the url of the external media you'd like to add to the media library and click 'Add'.
 
 == Changelog ==
+
+= Version 1.0.3 =
+Multiple URL links can be added in batch to the media library, with one URL per line in the text box.
 
 = Version 1.0.2.1 =
 Just changed the readme file, the changelog in previous readme file seems not work.
