@@ -18,17 +18,17 @@ Then you can use the plugin to add external media without import.
 3. Fill in the URLs of the images you want to add. You can fill in multiple URLs, with each URL filled in one line.
 4. Click the 'Add' button, the remote images will be added.
 
+Click 'Add External Media without Import' button in the media upload panel, the 'Add a media from URL' panel will appear:
+
 ![](screenshots/screenshot-1.png)
 
-Click 'Add External Media without Import' button in the media upload panel, the 'Add a media from URL' panel will appear.
+Enter the urls of the external media you'd like to add to the media library and click 'Add':
 
 ![](screenshots/screenshot-2.jpg)
 
-Enter the urls of the external media you'd like to add to the media library and click 'Add'.
+You can fill in multiple URLs, with each URL filled in one line:
 
 ![](screenshots/screenshot-3.jpg)
-
-You can fill in multiple URLs, with each URL filled in one line.
 
 You can also add an external media during the process of editing a post or page by clicking 'Add Media' -> 'Upload Files', and in the upload panel click 'Add External Media without Import'. The same input interface will appear.
 
