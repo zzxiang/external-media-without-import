@@ -33,7 +33,7 @@ Note that WordPress needs to know in advance the width and height of an image in
 
 == Screenshots ==
 1. Click 'Add External Media without Import' button in the media upload panel.
-2. Enter the urls of the external media you'd like to add to the media library and click 'Add'.
+2. Enter the URLs of the external media you'd like to add to the media library and click 'Add'.
 3. You can fill in multiple URLs, with each URL filled in one line.
 
 == Changelog ==

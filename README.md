@@ -22,7 +22,7 @@ Click 'Add External Media without Import' button in the media upload panel, the 
 
 ![](screenshots/screenshot-1.png)
 
-Enter the urls of the external media you'd like to add to the media library and click 'Add':
+Enter the URLs of the external media you'd like to add to the media library and click 'Add':
 
 ![](screenshots/screenshot-2.jpg)
 
