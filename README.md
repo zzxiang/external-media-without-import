@@ -13,25 +13,30 @@ Then you can use the plugin to add external media without import.
 
 ## Usage
 
-Click the 'Add New' button in the 'Media' -> 'Library' page, the media upload panel will show up, in which there's an 'Add External Media without Import' button. Click it.
+1. Click the 'Add New' button in the 'Media' -> 'Library' page, the media upload panel will show up, in which there's an 'Add External Media without Import' button. Click it.
+2. Or click the 'Add External Media without Import' submenu in the side bar.
+3. Fill in the URLs of the images you want to add. You can fill in multiple URLs, with each URL filled in one line.
+4. Click the 'Add' button, the remote images will be added.
 
 ![](screenshots/screenshot-1.png)
 
-If the Library page is in grid mode, the 'Add a media from URL' panel will appear.
+Click 'Add External Media without Import' button in the media upload panel, the 'Add a media from URL' panel will appear.
 
-![](screenshots/screenshot-2.png)
+![](screenshots/screenshot-2.jpg)
 
-If the Library page is in list mode, clicking 'Add External Media without Import' in the upload panel directs you to the 'Add External Media without Import' submenu page, which can also be accessed by clicking 'Media' -> 'Add External Media without Import' in the admin menu. The input interface of the submenu page is the same as that in grid mode.
+Enter the urls of the external media you'd like to add to the media library and click 'Add'.
 
-Fill in the URL and click the 'Add' button, the remote image will be added.
+![](screenshots/screenshot-3.jpg)
+
+You can fill in multiple URLs, with each URL filled in one line.
 
 You can also add an external media during the process of editing a post or page by clicking 'Add Media' -> 'Upload Files', and in the upload panel click 'Add External Media without Import'. The same input interface will appear.
 
-Note that WordPress needs to know in advance the width and height of an image in order to correctly display it in the media library page and any post/page. In most cases, the plugin resolves these properties automatically without worrying you. But in rare cases, the plugin may fail to get the width and height of the image you specify when you click 'Add' in the 'Add a media from URL' panel. In that case, some input fields will show up and let you fill in the properties manually.
+Note that WordPress needs to know in advance the width and height of an image in order to correctly display it in the media library page and any post/page.  In most cases, the plugin resolves these properties automatically without worrying you. But in rare cases, the plugin may fail to get the widths and heights of the images you specify. In that case, some input fields will show up and let you fill in the properties manually.
 
 ## Changelog
 
-**Version 1.0.3**
+**Version 1.1**
 
 Multiple URL links can be added in batch to the media library, with one URL per line in the text box.
 
