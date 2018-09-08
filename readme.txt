@@ -3,7 +3,7 @@ Contributors: zzxiang
 Tags: remote media, remote URL, remote image, remote file, external media
 Requires at least: 4.7.4
 Tested up to: 4.9.8
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
 
@@ -37,6 +37,9 @@ Note that WordPress needs to know in advance the width and height of an image in
 3. You can fill in multiple URLs, with each URL filled in one line.
 
 == Changelog ==
+
+= Version 1.1. =
+Debug warnings are fixed.
 
 = Version 1.1 =
 Multiple URL links can be added in batch to the media library, with one URL per line in the text box.

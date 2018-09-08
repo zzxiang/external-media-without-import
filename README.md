@@ -36,6 +36,10 @@ Note that WordPress needs to know in advance the width and height of an image in
 
 ## Changelog
 
+**Version 1.1.1**
+
+Debug warnings are fixed.
+
 **Version 1.1**
 
 Multiple URL links can be added in batch to the media library, with one URL per line in the text box.
