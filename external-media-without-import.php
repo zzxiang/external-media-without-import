@@ -24,23 +24,17 @@ https://www.gnu.org/licenses/gpl-3.0-standalone.html.
 */
 namespace emwi;
 
-$style = 'emwi-css';
-$css_file = plugins_url( '/external-media-without-import.css', __FILE__ );
-add_action('wp_register_style', function () use( $style, $css_file ){
-    wp_register_style( $style, $css_file );
-});
-add_action('wp_enqueue_style', function () use( $style ){
-    wp_enqueue_script( $style );
-});
-
-$script = 'emwi-js';
-$js_file = plugins_url( '/external-media-without-import.js', __FILE__ );
-add_action('wp_register_script', function () use( $script, $js_file ){
-    wp_register_script( $script, $js_file, array( 'jquery' ) );
-});
-add_action('wp_enqueue_scripts', function () use( $script ){
-    wp_enqueue_script( $script );
-});
+function init_emwi() {
+	$style = 'emwi-css';
+	$css_file = plugins_url( '/external-media-without-import.css', __FILE__ );
+	wp_register_style( $style, $css_file );
+	wp_enqueue_style( $style );
+	$script = 'emwi-js';
+	$js_file = plugins_url( '/external-media-without-import.js', __FILE__ );
+	wp_register_script( $script, $js_file, array( 'jquery' ) );
+	wp_enqueue_script( $script );
+}
+add_action( 'admin_enqueue_scripts', 'emwi\init_emwi' );
 
 add_action( 'admin_menu', 'emwi\add_submenu' );
 add_action( 'post-plupload-upload-ui', 'emwi\post_upload_ui' );
@@ -94,19 +88,19 @@ function print_media_new_panel( $is_in_upload_ui ) {
 ?>
 	<div id="emwi-media-new-panel" <?php if ( $is_in_upload_ui ) : ?>style="display: none"<?php endif; ?>>
 		<label id="emwi-urls-label"><?php echo __('Add medias from URLs'); ?></label>
-		<textarea id="emwi-urls" rows="<?php echo $is_in_upload_ui ? 3 : 10 ?>" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php echo esc_url( $_GET['urls'] ); ?>"></textarea>
+		<textarea id="emwi-urls" rows="<?php echo $is_in_upload_ui ? 3 : 10 ?>" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php if ( isset( $_GET['urls'] ) ) echo esc_url( $_GET['urls'] ); ?>"></textarea>
 		<div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
 		<div>
-			<span id="emwi-error"><?php echo esc_html( $_GET['error'] ); ?></span>
+			<span id="emwi-error"><?php if ( isset( $_GET['error'] ) ) echo esc_html( $_GET['error'] ); ?></span>
 			<?php echo _('Please fill in the following properties manually. If you leave the fields blank (or 0 for width/height), the plugin will try to resolve them automatically.'); ?>
 		</div>
 		<div id="emwi-properties">
 			<label><?php echo __('Width'); ?></label>
-			<input id="emwi-width" name="width" type="number" value="<?php echo esc_html( $_GET['width'] ); ?>">
+			<input id="emwi-width" name="width" type="number" value="<?php if ( isset( $_GET['width'] ) ) echo esc_html( $_GET['width'] ); ?>">
 			<label><?php echo __('Height'); ?></label>
-			<input id="emwi-height" name="height" type="number" value="<?php echo esc_html( $_GET['height'] ); ?>">
+			<input id="emwi-height" name="height" type="number" value="<?php if ( isset( $_GET['height'] ) ) echo esc_html( $_GET['height'] ); ?>">
 			<label><?php echo __('MIME Type'); ?></label>
-			<input id="emwi-mime-type" name="mime-type" type="text" value="<?php echo esc_html( $_GET['mime-type'] ); ?>">
+			<input id="emwi-mime-type" name="mime-type" type="text" value="<?php if ( isset( $_GET['mime-type'] ) ) echo esc_html( $_GET['mime-type'] ); ?>">
 		</div>
 		</div>
 		<div id="emwi-buttons-row">
