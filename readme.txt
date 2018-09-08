@@ -38,7 +38,7 @@ Note that WordPress needs to know in advance the width and height of an image in
 
 == Changelog ==
 
-= Version 1.1. =
+= Version 1.1.1 =
 Debug warnings are fixed.
 
 = Version 1.1 =
