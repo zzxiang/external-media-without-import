@@ -42,6 +42,14 @@ add_action( 'post-html-upload-ui', 'emwi\post_upload_ui' );
 add_action( 'wp_ajax_add_external_media_without_import', 'emwi\wp_ajax_add_external_media_without_import' );
 add_action( 'admin_post_add_external_media_without_import', 'emwi\admin_post_add_external_media_without_import' );
 
+add_filter( 'get_attached_file', function( $file, $attachment_id ) {
+	if ( empty( $file ) ) {
+		$post = get_post( $attachment_id );
+		return $post->guid;
+	}
+	return $file;
+}, 10, 2 );
+
 function add_submenu() {
 	add_submenu_page(
 		'upload.php',
