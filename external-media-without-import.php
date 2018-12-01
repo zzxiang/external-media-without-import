@@ -2,7 +2,7 @@
 /*
 Plugin Name: External Media without Import
 Description: Add external images to the media library without importing, i.e. uploading them to your WordPress site.
-Version: 1.1.1
+Version: 1.1.2
 Author: Zhixiang Zhu
 Author URI: http://zxtechart.com
 License: GPLv3

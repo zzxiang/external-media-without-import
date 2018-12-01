@@ -36,6 +36,17 @@ Note that WordPress needs to know in advance the width and height of an image in
 
 ## Changelog
 
+**Version 1.1.2 - 2018.12.2**
+
+Fix: external images added in WooCommerce Product gallery disappear when clicking Publish/Update.
+
+Similar issue of other plugins may also by chance be fixed.
+
+Detailed information of this issue:
+
+[https://github.com/zzxiang/external-media-without-import/issues/10](https://github.com/zzxiang/external-media-without-import/issues/10)
+[https://wordpress.org/support/topic/product-gallery-image-not-working/](https://wordpress.org/support/topic/product-gallery-image-not-working/)
+
 **Version 1.1.1**
 
 Debug warnings are fixed.
