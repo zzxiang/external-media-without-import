@@ -42,6 +42,16 @@ add_action( 'post-html-upload-ui', 'emwi\post_upload_ui' );
 add_action( 'wp_ajax_add_external_media_without_import', 'emwi\wp_ajax_add_external_media_without_import' );
 add_action( 'admin_post_add_external_media_without_import', 'emwi\admin_post_add_external_media_without_import' );
 
+/**
+ * This filter is to make attachments added by this plugin pass the test
+ * of wp_attachment_is_image. Otherwise issues with other plugins such
+ * as WooCommerce occur:
+ *
+ * https://github.com/zzxiang/external-media-without-import/issues/10
+ * https://wordpress.org/support/topic/product-gallery-image-not-working/
+ * http://zxtechart.com/2017/06/05/wordpress/#comment-178
+ * http://zxtechart.com/2017/06/05/wordpress/#comment-192
+ */
 add_filter( 'get_attached_file', function( $file, $attachment_id ) {
 	if ( empty( $file ) ) {
 		$post = get_post( $attachment_id );
