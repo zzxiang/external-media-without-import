@@ -55,7 +55,9 @@ add_action( 'admin_post_add_external_media_without_import', 'emwi\admin_post_add
 add_filter( 'get_attached_file', function( $file, $attachment_id ) {
 	if ( empty( $file ) ) {
 		$post = get_post( $attachment_id );
-		return $post->guid;
+		if ( get_post_type( $post ) == 'attachment' ) {
+			return $post->guid;
+		}
 	}
 	return $file;
 }, 10, 2 );
