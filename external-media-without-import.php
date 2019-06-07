@@ -113,7 +113,7 @@ function print_media_new_panel( $is_in_upload_ui ) {
 		<div id="emwi-hidden" <?php if ( $is_in_upload_ui || empty( $_GET['error'] ) ) : ?>style="display: none"<?php endif; ?>>
 		<div>
 			<span id="emwi-error"><?php if ( isset( $_GET['error'] ) ) echo esc_html( $_GET['error'] ); ?></span>
-			<?php echo _('Please fill in the following properties manually. If you leave the fields blank (or 0 for width/height), the plugin will try to resolve them automatically.', 'external-media-without-import' ); ?>
+			<?php echo __('Please fill in the following properties manually. If you leave the fields blank (or 0 for width/height), the plugin will try to resolve them automatically.', 'external-media-without-import' ); ?>
 		</div>
 		<div id="emwi-properties">
 			<label><?php echo __('Width', 'external-media-without-import' ); ?></label>
