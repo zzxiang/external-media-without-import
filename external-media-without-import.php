@@ -67,7 +67,7 @@ function add_submenu() {
 		'upload.php',
 		__( 'Add External Media without Import' ),
 		__( 'Add External Media without Import' ),
-		'manage_options',
+		'upload_files',
 		'add-external-media-without-import',
 		'emwi\print_submenu_page'
 	);
